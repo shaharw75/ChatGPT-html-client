@@ -14,7 +14,7 @@
         }
 
         textarea {
-            width: 100%;
+            width: 95%;
             height: 123px;
             font-size: 16px;
             font-family: arial;
@@ -99,7 +99,7 @@
             align-content: center;
             width: 100%;
             display: grid;
-            grid-template-columns: 30% 40% 30%;
+            grid-template-columns: 20% 60% 20%;
         }
     </style>
 
@@ -189,20 +189,13 @@
             return history.map((row, index) => {
                 const spinnerClass = index + 1 === history.length ? "animate" : "";
                 const isHebrew = containsHebrew(row.content);
-                let content = row.content.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+                let content = row.content.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n","<br/>");
                 const alignment = isHebrew ? "right" : "left";
                 const direction = isHebrew ? "rtl" : "ltr";
                 const style = `padding-bottom: 10px;direction: ${direction};text-align: ${alignment}; 
                       ${row.role === "user" ? "color: blue;" : "border-bottom: 1px solid lightgray;"}`;
-                const isHtml = containsHTML(content);
 
-                if (isHtml) {
-                    return `<div class='${spinnerClass}' style="${style}"><pre><code>${row.role === "user" ? `<b>${content}</b>` : content}</code></pre></div>`;
-                }
-                else {
-                    content = content.replaceAll("\n", "<br/>");
-                    return `<div class='${spinnerClass}' style="${style}">${row.role === "user" ? `<b>${content}</b>` : content}</div>`;
-                }
+                return `<div class='${spinnerClass}' style="${style}">${row.role === "user" ? `<b>${content}</b>` : displayHtml(content)}</div>`;
             }).join('');
         };
 
@@ -216,6 +209,10 @@
                     delay: (el, i) => 150 * (i + 1)
                 });
         };
+
+        const displayHtml = (str) => {
+            return str.replaceAll("```html","<pre><code>").replaceAll("```","</code></pre>");
+        }
 
         const updateTitleAndSubjects = (result) => {
             if (!result.choices || !result.choices[0] || !result.choices[0].message) return;
@@ -272,19 +269,12 @@
                 document.getElementById("display").innerHTML = history.map((row, index) => {
                     const spinnerClass = index + 1 === history.length ? "animate" : "";
                     const isHebrew = containsHebrew(row.content);
-                    let content = row.content.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+                    let content = row.content.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n","<br/>");;
                     const alignment = isHebrew ? "right" : "left";
                     const direction = isHebrew ? "rtl" : "ltr";
                     const style = `padding-bottom: 10px;direction: ${direction};text-align: ${alignment}; 
                           ${row.role === "user" ? "color: blue;" : "border-bottom: 1px solid lightgray;"}`;
-                    const isHtml = containsHTML(content);
-                    if (isHtml) {
-                        return `<div class='${spinnerClass}' style="${style}"><pre><code>${row.role === "user" ? `<b>${content}</b>` : content}</code></pre></div>`;
-                    }
-                    else {
-                        content = content.replaceAll("\n", "<br/>");
-                        return `<div class='${spinnerClass}' style="${style}">${row.role === "user" ? `<b>${content}</b>` : content}</div>`;
-                    }
+                    return `<div class='${spinnerClass}' style="${style}">${row.role === "user" ? `<b>${content}</b>` : displayHtml(content)}</div>`;
                 }).join('');
             }
 
@@ -338,7 +328,7 @@
             <div style="display:flex">
                 <div id="history" class="history"></div>
             </div>
-            <div style="display:flex"><textarea id="input" placeholder="Your wish is my command ;)"></textarea></div>
+            <div style="display:flex; justify-content: right;"><textarea id="input" placeholder="Your wish is my command ;)"></textarea></div>
         </div>
         <div class="grid">
             <div style="display: flex"></div>
