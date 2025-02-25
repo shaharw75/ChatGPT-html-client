@@ -189,12 +189,20 @@
             return history.map((row, index) => {
                 const spinnerClass = index + 1 === history.length ? "animate" : "";
                 const isHebrew = containsHebrew(row.content);
-                const content = row.content.replaceAll("\n", "<br/>");
+                let content = row.content.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
                 const alignment = isHebrew ? "right" : "left";
                 const direction = isHebrew ? "rtl" : "ltr";
                 const style = `padding-bottom: 10px;direction: ${direction};text-align: ${alignment}; 
                       ${row.role === "user" ? "color: blue;" : "border-bottom: 1px solid lightgray;"}`;
-                return `<div class='${spinnerClass}' style="${style}">${row.role === "user" ? `<b>${content}</b>` : content}</div>`;
+                const isHtml = containsHTML(content);
+
+                if (isHtml) {
+                    return `<div class='${spinnerClass}' style="${style}"><pre><code>${row.role === "user" ? `<b>${content}</b>` : content}</code></pre></div>`;
+                }
+                else {
+                    content = content.replaceAll("\n", "<br/>");
+                    return `<div class='${spinnerClass}' style="${style}">${row.role === "user" ? `<b>${content}</b>` : content}</div>`;
+                }
             }).join('');
         };
 
@@ -261,17 +269,22 @@
             const found = data.find(x => x.title === s);
             if (found) {
                 history = JSON.parse(found.history);
-
                 document.getElementById("display").innerHTML = history.map((row, index) => {
                     const spinnerClass = index + 1 === history.length ? "animate" : "";
                     const isHebrew = containsHebrew(row.content);
-                    const content = row.content.replaceAll("\n", "<br/>");
+                    let content = row.content.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
                     const alignment = isHebrew ? "right" : "left";
                     const direction = isHebrew ? "rtl" : "ltr";
                     const style = `padding-bottom: 10px;direction: ${direction};text-align: ${alignment}; 
                           ${row.role === "user" ? "color: blue;" : "border-bottom: 1px solid lightgray;"}`;
-
-                    return `<div class='${spinnerClass}' style="${style}">${row.role === "user" ? `<b>${content}</b>` : content}</div>`;
+                    const isHtml = containsHTML(content);
+                    if (isHtml) {
+                        return `<div class='${spinnerClass}' style="${style}"><pre><code>${row.role === "user" ? `<b>${content}</b>` : content}</code></pre></div>`;
+                    }
+                    else {
+                        content = content.replaceAll("\n", "<br/>");
+                        return `<div class='${spinnerClass}' style="${style}">${row.role === "user" ? `<b>${content}</b>` : content}</div>`;
+                    }
                 }).join('');
             }
 
@@ -304,6 +317,12 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        const containsHTML = (str) => {
+            // Regular expression to match HTML tags
+            const htmlTagPattern = /<\/?[a-z][\s\S]*>/i;
+            return htmlTagPattern.test(str);
         }
 
     </script>
