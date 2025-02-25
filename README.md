@@ -5,6 +5,7 @@ Whenever you've got OpenAi available api key you can just use it with this pure 
 
 Highlight features:
 * Chats history window ;)
+* Ability to copy content to the clipboard or download.
 * Mobile version !
   
 You are mostly welcomed to modify this code and create your own version.
