@@ -48,6 +48,16 @@
             font-size: 20px;
         }
 
+        .secondary {
+            border-radius: 5px;
+            padding: 5px 15px 5px 15px;
+            color: white;
+            background-color: cadetblue;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
         button:hover {
             background-color: darkblue;
         }
@@ -279,6 +289,23 @@
             localStorage.removeItem("gptHistory");
             displaySubjects();
         }
+
+        const copyDivContent = () => {
+            const div = document.getElementById('display');
+            navigator.clipboard.writeText(div.innerText);
+        }
+
+        const downloadDivAsHTML = () => {
+            const divContent = document.getElementById("display").innerHTML;
+            const blob = new Blob(["<html><body>" + divContent + "</body></html>"], { type: "text/html" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "content.html";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
     </script>
 </head>
 
@@ -297,7 +324,10 @@
         <div class="grid">
             <div style="display: flex"></div>
             <div style="display: flex;justify-content: center;"><button onclick="query(false)">Ask</button>
-                &nbsp;&nbsp;<button onclick="query(true)">Ask New Subject</button></div>
+                &nbsp;&nbsp;<button onclick="query(true)">Ask new subject</button>
+                &nbsp;&nbsp;<button class="secondary" onclick="copyDivContent()">Copy to clipboard</button>
+                &nbsp;&nbsp;<button class="secondary" onclick="downloadDivAsHTML()">Download</button>
+            </div>
             <div style="display: flex">
                 <svg style="display: none; height: 50px" id="spinner" xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 200 200'>
