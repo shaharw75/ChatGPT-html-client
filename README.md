@@ -7,6 +7,9 @@ Highlight features:
 * Chats history window ;)
 * Ability to copy content to the clipboard or download.
 * Mobile version !
+
+USAGE:
+Look for the apiKey definition (YOUR-API-KEY-HERE), and replace the string with your real apiKey.
   
 You are mostly welcomed to modify this code and create your own version.
 
