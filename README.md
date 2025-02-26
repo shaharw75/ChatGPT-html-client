@@ -6,8 +6,8 @@ Whenever you've got OpenAi available api key you can just use it with this pure 
 Highlight features:
 * Chats history list ;)
 * Ability to copy content to the clipboard or to download and even print.
-* Change model.
-* Adjust response creativeness.
+* Switch to different AI models.
+* Adjust AI response creativeness.
 * Supports displaying of different programming languages code text.
 * New look :)
 * Mobile version !
