@@ -10,7 +10,8 @@ Highlight features:
 
 USAGE:
 Look for the apiKey definition (YOUR-API-KEY-HERE), and replace the string with your real apiKey.
-  
+The current AI model is "gpt-o4", depends on your openAi api settings, you can change it to any other model.
+
 You are mostly welcomed to modify this code and create your own version.
 
 Enjoy !
