@@ -8,7 +8,8 @@ Highlight features:
 * Ability to copy content to the clipboard or to download and even print.
 * Change model.
 * Adjust response creativeness.
-* Supports displaying of all code languages.
+* Supports displaying of different programming languages code text.
+* New look :)
 * Mobile version !
 
 USAGE:
