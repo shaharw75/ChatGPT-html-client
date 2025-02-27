@@ -10,6 +10,7 @@ Highlight features:
 * Adjust AI response creativeness.
 * Supports displaying of different programming languages code text.
 * New look :)
+* * Hebrew language support.
 * Mobile version !
 
 USAGE:
