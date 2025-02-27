@@ -11,6 +11,7 @@ Highlight features:
 * Supports displaying of different programming languages code text.
 * New look :)
 * Hebrew language support.
+* Text-to-speech.
 * Mobile version !
 
 USAGE:
