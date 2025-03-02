@@ -127,20 +127,24 @@
             background-color: darkcyan !important;
             color: white !important;
         }
+
     </style>
 
     <script>
         let model = "gpt-4o";
-        let temperature = 0.7;
+        let temperature = 0.4;
         let history = [];
         let results = [];
         let latestTitle = null;
         let subjects = [];
         let currentSubject = null;
+        let running = false;
 
         const apiKey = "YOUR-API-KEY-HERE";
 
         const query = (clear) => {
+            if (running) return;
+            running = true;
             const spinner = document.getElementById("spinner");
             const input = document.getElementById("input");
             const display = document.getElementById("display");
@@ -206,6 +210,7 @@
                     spinner.style.display = "none";
 
                     animateResponse();
+                    running = false;
 
                     let req = "give this conversation a title in maximum 10 words without quatation marks or double quatation marks";
                     if (containsHebrew(text)) {
@@ -234,7 +239,7 @@
                 });
                 if (content.length > 0) {
                     const utterance = new SpeechSynthesisUtterance(content);
-                    const lang = containsHebrew(content) ? "he-IL" : "en-US";
+                    const lang = containsHebrew(content) ? "he-IL" : "en-GB";
                     const voice = synth.getVoices().find(v => v.lang === lang);
                     utterance.voice = voice;
                     synth.speak(utterance);
@@ -260,8 +265,8 @@
 
         const renderHistory = (history) => {
             return history.map((row, index) => {
-                const svg = '<span onclick="javascript:navigator.clipboard.writeText(document.getElementById(\'ans_' + (index + 1) + '\').innerText);" title="Copy answer to clipboard" style="cursor:pointer"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#1C274C"/><path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#0000ff"/></svg></span>';
-                const svgSpeak = "<svg style='cursor:pointer' onclick='javascript:speak(" + index + ");' title='Press to listen' fill='#0000ff' width='20px' height='20px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M9,14a4,4,0,1,0-4-4A4,4,0,0,0,9,14ZM9,8a2,2,0,1,1-2,2A2,2,0,0,1,9,8ZM6,15h6a4,4,0,0,1,4,4v2a1,1,0,0,1-2,0V19a2,2,0,0,0-2-2H6a2,2,0,0,0-2,2v2a1,1,0,0,1-2,0V19A4,4,0,0,1,6,15Zm11.462-5A5.977,5.977,0,0,1,15.7,14.253a1,1,0,0,1-1.414-1.414,4.015,4.015,0,0,0,0-5.678A1,1,0,1,1,15.7,5.747,5.977,5.977,0,0,1,17.462,10Zm-.181,7.7a1,1,0,0,1,.024-1.414,8.667,8.667,0,0,0,0-12.562A1,1,0,0,1,18.7,2.281a10.667,10.667,0,0,1,0,15.438,1,1,0,0,1-1.414-.024Z'/></svg>";
+                const svg = '<span class="svg" onclick="javascript:navigator.clipboard.writeText(document.getElementById(\'ans_' + (index + 1) + '\').innerText);" title="Copy answer to clipboard" style="cursor:pointer"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.24 2H11.3458C9.58159 1.99999 8.18418 1.99997 7.09054 2.1476C5.96501 2.29953 5.05402 2.61964 4.33559 3.34096C3.61717 4.06227 3.29833 4.97692 3.14701 6.10697C2.99997 7.205 2.99999 8.60802 3 10.3793V16.2169C3 17.725 3.91995 19.0174 5.22717 19.5592C5.15989 18.6498 5.15994 17.3737 5.16 16.312L5.16 11.3976L5.16 11.3024C5.15993 10.0207 5.15986 8.91644 5.27828 8.03211C5.40519 7.08438 5.69139 6.17592 6.4253 5.43906C7.15921 4.70219 8.06404 4.41485 9.00798 4.28743C9.88877 4.16854 10.9887 4.1686 12.2652 4.16867L12.36 4.16868H15.24L15.3348 4.16867C16.6113 4.1686 17.7088 4.16854 18.5896 4.28743C18.0627 2.94779 16.7616 2 15.24 2Z" fill="#1C274C"/><path d="M6.6001 11.3974C6.6001 8.67119 6.6001 7.3081 7.44363 6.46118C8.28716 5.61426 9.64481 5.61426 12.3601 5.61426H15.2401C17.9554 5.61426 19.313 5.61426 20.1566 6.46118C21.0001 7.3081 21.0001 8.6712 21.0001 11.3974V16.2167C21.0001 18.9429 21.0001 20.306 20.1566 21.1529C19.313 21.9998 17.9554 21.9998 15.2401 21.9998H12.3601C9.64481 21.9998 8.28716 21.9998 7.44363 21.1529C6.6001 20.306 6.6001 18.9429 6.6001 16.2167V11.3974Z" fill="#0000ff"/></svg></span>';
+                const svgSpeak = "<span class='svg' style='cursor:pointer' onclick='javascript:speak(" + index + ");' title='Press to listen'><svg fill='#0000ff' width='20px' height='20px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M9,14a4,4,0,1,0-4-4A4,4,0,0,0,9,14ZM9,8a2,2,0,1,1-2,2A2,2,0,0,1,9,8ZM6,15h6a4,4,0,0,1,4,4v2a1,1,0,0,1-2,0V19a2,2,0,0,0-2-2H6a2,2,0,0,0-2,2v2a1,1,0,0,1-2,0V19A4,4,0,0,1,6,15Zm11.462-5A5.977,5.977,0,0,1,15.7,14.253a1,1,0,0,1-1.414-1.414,4.015,4.015,0,0,0,0-5.678A1,1,0,1,1,15.7,5.747,5.977,5.977,0,0,1,17.462,10Zm-.181,7.7a1,1,0,0,1,.024-1.414,8.667,8.667,0,0,0,0-12.562A1,1,0,0,1,18.7,2.281a10.667,10.667,0,0,1,0,15.438,1,1,0,0,1-1.414-.024Z'/></svg></span>";
 
                 const spinnerClass = index + 1 === history.length ? "animate" : "";
                 const isHebrew = containsHebrew(row.content);
@@ -396,7 +401,7 @@
 
         const downloadDivAsHTML = () => {
             const divContent = document.getElementById("display").innerHTML;
-            const blob = new Blob(["<html><body>" + divContent + "</body></html>"], { type: "text/html" });
+            const blob = new Blob(["<html><head><style>\n.svg{display: none;}\n</style></head><body style='font-family:arial;'>" + divContent + "</body></html>"], { type: "text/html" });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = "content_" + new Date().toLocaleString() + ".html";
@@ -455,14 +460,13 @@
                                     onchange="javascript: model = document.getElementById('aiModel').value;">
                                     <option value="gpt-4o" selected>gpt-4o</option>
                                     <option value="gpt-4o-mini">gpt-4o-mini</option>
-                                    <option value="gpt-4-turbo">gpt-4-turbo</option>
                                 </select>
                                 &nbsp;&nbsp;Response Creativeness &nbsp;
                                 <select id="resTemp"
                                     onchange="javascript: temperature = document.getElementById('resTemp').value;">
                                     <option value="0">Low</option>
-                                    <option value="0.4">Medium</option>
-                                    <option value="0.7" selected>Medium Well</option>
+                                    <option value="0.4" selected>Medium</option>
+                                    <option value="0.7">Medium Well</option>
                                     <option value="1">High</option>
                                 </select>
                             </div>

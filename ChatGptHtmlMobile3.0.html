@@ -95,16 +95,19 @@
 
     <script>
         let model = "gpt-4o";
-        let temperature = 0.7;
+        let temperature = 0.4;
         let history = [];
         let results = [];
         let latestTitle = null;
         let subjects = [];
         let currentSubject = null;
-		
+        let running = false;
+
         const apiKey = "YOUR-API-KEY-HERE";
 
         const query = (clear) => {
+            if(running)return;
+            running = true;
             const spinner = document.getElementById("spinner");
             const input = document.getElementById("input");
             const display = document.getElementById("display");
@@ -172,7 +175,7 @@
                     spinner.style.display = "none";
 
                     animateResponse();
-                    
+                    running = false;
                     let req = "give this conversation a title in maximum 10 words without quatation marks or double quatation marks";
                     if (containsHebrew(text)) {
                         req += " in the hebrew language (don't mention the hebrew language)";
@@ -353,12 +356,11 @@
         <select id="aiModel" onchange="javascript: model = document.getElementById('aiModel').value;">
             <option value="gpt-4o" selected>gpt-4o</option>
             <option value="gpt-4o-mini">gpt-4o-mini</option>
-            <option value="gpt-4-turbo">gpt-4-turbo</option>
         </select>
         &nbsp;&nbsp;<select id="resTemp" onchange="javascript: temperature = document.getElementById('resTemp').value;">
             <option value="0">Low</option>
-            <option value="0.4">Medium</option>
-            <option value="0.7" selected>Medium Well</option>
+            <option value="0.4" selected>Medium</option>
+            <option value="0.7">Medium Well</option>
             <option value="1">High</option>
         </select>
     </div>
